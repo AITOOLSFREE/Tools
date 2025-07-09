@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Text Generator - Create blog posts, social media content, product descriptions, emails, and more with our advanced AI text generation tool.">
+    <meta name="keywords" content="AI text generator, content generator, blog post generator, social media generator, AI writing assistant">
+    <title>AI Text Generator - MultiTools Pro</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-800: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background-color: #fafafa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+            transform: translateY(-1px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid var(--gray-200);
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .content-type-card {
+            background: var(--gray-100);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .content-type-card:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-type-card.active {
+            background: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.1);
+        }
+
+        .generated-content {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            border: 2px solid var(--gray-200);
+            min-height: 300px;
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.3em;
+        }
+
+        .feature-badge {
+            background: var(--accent-color);
+            color: white;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .word-count {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+            margin-top: 1rem;
+        }
+
+        .ad-container {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+            
+            .tool-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="fas fa-tools me-2"></i>MultiTools Pro
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../index.html#image-tools">Image Tools</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../index.html#text-tools">Text Tools</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../../index.html#misc-tools">AI Tools</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3">
+                <i class="fas fa-robot me-3"></i>AI Text Generator
+            </h1>
+            <p class="lead mb-0">Generate high-quality content with advanced AI technology</p>
+            <div class="mt-3">
+                <span class="feature-badge me-2">Blog Posts</span>
+                <span class="feature-badge me-2">Social Media</span>
+                <span class="feature-badge me-2">Product Descriptions</span>
+                <span class="feature-badge">Email Templates</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Input Section -->
+            <div class="col-lg-4 mb-4">
+                <div class="tool-card">
+                    <h3 class="mb-4"><i class="fas fa-cog me-2"></i>Content Settings</h3>
+                    
+                    <!-- Content Type Selection -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Content Type</label>
+                        <div id="contentTypes">
+                            <div class="content-type-card active" data-type="blog-post">
+                                <i class="fas fa-blog me-2"></i>
+                                <strong>Blog Post</strong>
+                                <small class="d-block text-muted">Professional blog articles</small>
+                            </div>
+                            <div class="content-type-card" data-type="social-media">
+                                <i class="fas fa-share-alt me-2"></i>
+                                <strong>Social Media</strong>
+                                <small class="d-block text-muted">Posts for social platforms</small>
+                            </div>
+                            <div class="content-type-card" data-type="product-description">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                <strong>Product Description</strong>
+                                <small class="d-block text-muted">E-commerce descriptions</small>
+                            </div>
+                            <div class="content-type-card" data-type="email">
+                                <i class="fas fa-envelope me-2"></i>
+                                <strong>Email Template</strong>
+                                <small class="d-block text-muted">Marketing emails</small>
+                            </div>
+                            <div class="content-type-card" data-type="creative">
+                                <i class="fas fa-magic me-2"></i>
+                                <strong>Creative Writing</strong>
+                                <small class="d-block text-muted">Stories and creative content</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Topic Input -->
+                    <div class="mb-3">
+                        <label for="topicInput" class="form-label fw-semibold">Topic/Keywords</label>
+                        <input type="text" class="form-control" id="topicInput" placeholder="e.g., 'sustainable fashion', 'productivity tips'">
+                    </div>
+
+                    <!-- Content Length -->
+                    <div class="mb-3">
+                        <label for="contentLength" class="form-label fw-semibold">Content Length</label>
+                        <select class="form-select" id="contentLength">
+                            <option value="short">Short (100-200 words)</option>
+                            <option value="medium" selected>Medium (300-500 words)</option>
+                            <option value="long">Long (600-800 words)</option>
+                        </select>
+                    </div>
+
+                    <!-- Tone Selection -->
+                    <div class="mb-3">
+                        <label for="toneSelect" class="form-label fw-semibold">Writing Tone</label>
+                        <select class="form-select" id="toneSelect">
+                            <option value="professional">Professional</option>
+                            <option value="casual" selected>Casual</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="formal">Formal</option>
+                            <option value="persuasive">Persuasive</option>
+                            <option value="humorous">Humorous</option>
+                        </select>
+                    </div>
+
+                    <!-- Target Audience -->
+                    <div class="mb-4">
+                        <label for="audienceSelect" class="form-label fw-semibold">Target Audience</label>
+                        <select class="form-select" id="audienceSelect">
+                            <option value="general">General Audience</option>
+                            <option value="professionals">Professionals</option>
+                            <option value="students">Students</option>
+                            <option value="consumers">Consumers</option>
+                            <option value="entrepreneurs">Entrepreneurs</option>
+                            <option value="tech-savvy">Tech-Savvy</option>
+                        </select>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="btn btn-primary w-100 mb-3" id="generateBtn">
+                        <i class="fas fa-magic me-2"></i>Generate Content
+                    </button>
+
+                    <!-- Additional Options -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary btn-sm" id="regenerateBtn" style="display: none;">
+                            <i class="fas fa-redo me-2"></i>Regenerate
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" id="copyBtn" style="display: none;">
+                            <i class="fas fa-copy me-2"></i>Copy to Clipboard
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ad Space -->
+                <div class="ad-container">
+                    <div class="text-muted small mb-2">Advertisement</div>
+                    <div style="height: 250px; background: #e9ecef; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                        Your 300x250 Ad Here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="col-lg-8">
+                <div class="tool-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3><i class="fas fa-file-alt me-2"></i>Generated Content</h3>
+                        <div id="wordCount" class="word-count"></div>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Generating...</span>
+                        </div>
+                        <p class="mt-3 text-muted">AI is crafting your content...</p>
+                    </div>
+
+                    <!-- Generated Content Display -->
+                    <div class="generated-content" id="generatedContent">
+                        <div class="text-center text-muted py-5">
+                            <i class="fas fa-robot fa-3x mb-3"></i>
+                            <h5>Ready to Generate</h5>
+                            <p>Select your preferences and click "Generate Content" to create AI-powered text.</p>
+                        </div>
+                    </div>
+
+                    <!-- Content Actions -->
+                    <div class="mt-3 d-none" id="contentActions">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary w-100" id="downloadBtn">
+                                    <i class="fas fa-download me-2"></i>Download as TXT
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary w-100" id="shareBtn">
+                                    <i class="fas fa-share me-2"></i>Share Content
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-section">
+                    <h5><i class="fas fa-lightbulb me-2"></i>Pro Tips for Better Results</h5>
+                    <ul class="mb-0">
+                        <li>Be specific with your topic/keywords for more targeted content</li>
+                        <li>Choose the right tone that matches your brand voice</li>
+                        <li>Consider your target audience when selecting content length</li>
+                        <li>Use the regenerate feature to get different variations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad Banner -->
+        <div class="ad-container">
+            <div class="text-muted small mb-2">Advertisement</div>
+            <div style="height: 90px; background: #e9ecef; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                Your 728x90 Banner Ad Here
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-tools me-2"></i>MultiTools Pro</h5>
+                    <p class="mb-0">Your one-stop destination for all online tools.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0">&copy; 2024 MultiTools Pro. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // AI Text Generator Implementation
+        class AITextGenerator {
+            constructor() {
+                this.contentTypes = {
+                    'blog-post': {
+                        templates: [
+                            'introduction, main-points, conclusion',
+                            'hook, problem, solution, benefits',
+                            'story, lesson, application'
+                        ],
+                        structures: {
+                            'short': ['intro', 'main-point', 'conclusion'],
+                            'medium': ['intro', 'point1', 'point2', 'point3', 'conclusion'],
+                            'long': ['intro', 'background', 'point1', 'point2', 'point3', 'examples', 'conclusion']
+                        }
+                    },
+                    'social-media': {
+                        templates: ['hook, value, cta', 'question, answer, engagement'],
+                        structures: {
+                            'short': ['hook', 'value'],
+                            'medium': ['hook', 'value', 'cta'],
+                            'long': ['context', 'hook', 'value', 'engagement', 'cta']
+                        }
+                    },
+                    'product-description': {
+                        templates: ['features, benefits, specs', 'problem, solution, value'],
+                        structures: {
+                            'short': ['headline', 'key-benefit'],
+                            'medium': ['headline', 'features', 'benefits'],
+                            'long': ['headline', 'overview', 'features', 'benefits', 'specs', 'cta']
+                        }
+                    },
+                    'email': {
+                        templates: ['subject, greeting, value, cta', 'personal, offer, urgency'],
+                        structures: {
+                            'short': ['greeting', 'value', 'cta'],
+                            'medium': ['greeting', 'context', 'value', 'cta'],
+                            'long': ['greeting', 'personal', 'context', 'value', 'social-proof', 'cta']
+                        }
+                    },
+                    'creative': {
+                        templates: ['character, setting, conflict, resolution', 'theme, narrative, climax'],
+                        structures: {
+                            'short': ['setup', 'conflict', 'resolution'],
+                            'medium': ['introduction', 'development', 'climax', 'resolution'],
+                            'long': ['exposition', 'rising-action', 'climax', 'falling-action', 'resolution', 'denouement']
+                        }
+                    }
+                };
+
+                this.toneStyles = {
+                    'professional': {
+                        vocabulary: 'formal',
+                        sentences: 'complex',
+                        person: 'third'
+                    },
+                    'casual': {
+                        vocabulary: 'conversational',
+                        sentences: 'mixed',
+                        person: 'second'
+                    },
+                    'friendly': {
+                        vocabulary: 'warm',
+                        sentences: 'simple',
+                        person: 'second'
+                    },
+                    'formal': {
+                        vocabulary: 'academic',
+                        sentences: 'complex',
+                        person: 'third'
+                    },
+                    'persuasive': {
+                        vocabulary: 'compelling',
+                        sentences: 'varied',
+                        person: 'second'
+                    },
+                    'humorous': {
+                        vocabulary: 'playful',
+                        sentences: 'punchy',
+                        person: 'first'
+                    }
+                };
+
+                this.contentSamples = {
+                    'blog-post': {
+                        'sustainable fashion': {
+                            'professional': 'The fashion industry stands at a critical juncture where sustainability practices are no longer optional but essential for long-term viability. Sustainable fashion represents a paradigm shift that encompasses ethical manufacturing, environmentally conscious materials, and circular economy principles.',
+                            'casual': "Let's talk about sustainable fashion - it's basically the cool way to look good while saving the planet! You know that feeling when you find the perfect outfit and it also happens to be eco-friendly? That's what we're going for here.",
+                            'friendly': "Hey there, fashion lover! Have you ever wondered how your wardrobe choices can make a real difference for our planet? Sustainable fashion is an amazing way to express your style while caring for the environment we all share."
+                        },
+                        'productivity tips': {
+                            'professional': 'Effective productivity management requires a systematic approach to task prioritization, time allocation, and workflow optimization. Research demonstrates that individuals who implement structured productivity frameworks experience significant improvements in output quality and efficiency.',
+                            'casual': "Want to get more done without burning out? I've got some game-changing productivity tips that actually work (and no, they don't involve waking up at 4 AM or drinking 10 cups of coffee).",
+                            'friendly': "Ready to supercharge your productivity? These tried-and-tested tips will help you accomplish more while feeling less stressed. Let's dive into some strategies that can transform your daily routine!"
+                        }
+                    },
+                    'social-media': {
+                        'sustainable fashion': {
+                            'casual': "🌱 Shopping sustainably doesn't mean sacrificing style! Here are 3 easy ways to build an eco-friendly wardrobe that's both trendy and planet-friendly. Which tip will you try first? 👇 #SustainableFashion #EcoStyle",
+                            'friendly': "💚 Your style choices can change the world! Discover how choosing sustainable fashion brands helps reduce environmental impact while keeping you looking fabulous. What's your favorite eco-friendly brand? ✨",
+                            'persuasive': "🔥 STOP buying fast fashion! Here's why sustainable clothing is the smartest investment you'll make this year. Swipe to see the shocking truth about fashion's environmental impact ➡️"
+                        }
+                    }
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateWordCount('');
+            }
+
+            bindEvents() {
+                // Content type selection
+                document.querySelectorAll('.content-type-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        document.querySelectorAll('.content-type-card').forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                    });
+                });
+
+                // Generate button
+                document.getElementById('generateBtn').addEventListener('click', () => this.generateContent());
+                
+                // Regenerate button
+                document.getElementById('regenerateBtn').addEventListener('click', () => this.generateContent());
+                
+                // Copy button
+                document.getElementById('copyBtn').addEventListener('click', () => this.copyToClipboard());
+                
+                // Download button
+                document.getElementById('downloadBtn').addEventListener('click', () => this.downloadContent());
+                
+                // Share button
+                document.getElementById('shareBtn').addEventListener('click', () => this.shareContent());
+            }
+
+            async generateContent() {
+                const topic = document.getElementById('topicInput').value.trim();
+                if (!topic) {
+                    alert('Please enter a topic or keywords');
+                    return;
+                }
+
+                const contentType = document.querySelector('.content-type-card.active').dataset.type;
+                const length = document.getElementById('contentLength').value;
+                const tone = document.getElementById('toneSelect').value;
+                const audience = document.getElementById('audienceSelect').value;
+
+                // Show loading
+                this.showLoading();
+
+                // Simulate AI generation delay
+                await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
+
+                // Generate content
+                const generatedText = this.createContent(topic, contentType, length, tone, audience);
+                
+                // Display result
+                this.displayContent(generatedText);
+                this.updateWordCount(generatedText);
+                this.showContentActions();
+            }
+
+            createContent(topic, type, length, tone, audience) {
+                const structure = this.contentTypes[type].structures[length];
+                let content = '';
+
+                // Get base sample if available
+                const baseSample = this.contentSamples[type]?.[topic.toLowerCase()]?.[tone];
+                
+                if (baseSample) {
+                    content = this.expandContent(baseSample, structure, topic, tone, audience);
+                } else {
+                    content = this.generateFromTemplate(topic, type, structure, tone, audience);
+                }
+
+                return this.formatContent(content, type);
+            }
+
+            generateFromTemplate(topic, type, structure, tone, audience) {
+                let content = '';
+
+                structure.forEach((section, index) => {
+                    if (index > 0) content += '\n\n';
+                    
+                    switch (section) {
+                        case 'intro':
+                        case 'introduction':
+                            content += this.generateIntro(topic, tone, type);
+                            break;
+                        case 'hook':
+                            content += this.generateHook(topic, tone, type);
+                            break;
+                        case 'main-point':
+                        case 'point1':
+                        case 'point2':
+                        case 'point3':
+                            content += this.generateMainPoint(topic, tone, index);
+                            break;
+                        case 'conclusion':
+                            content += this.generateConclusion(topic, tone, type);
+                            break;
+                        case 'cta':
+                            content += this.generateCTA(topic, tone, type);
+                            break;
+                        case 'features':
+                            content += this.generateFeatures(topic, tone);
+                            break;
+                        case 'benefits':
+                            content += this.generateBenefits(topic, tone);
+                            break;
+                        default:
+                            content += this.generateGenericSection(topic, section, tone);
+                    }
+                });
+
+                return content;
+            }
+
+            generateIntro(topic, tone, type) {
+                const intros = {
+                    'professional': [
+                        `In today's rapidly evolving landscape, ${topic} has emerged as a critical consideration for organizations and individuals alike.`,
+                        `The significance of ${topic} cannot be overstated in contemporary discussions surrounding innovation and progress.`,
+                        `As we navigate the complexities of modern life, ${topic} presents both opportunities and challenges that warrant careful examination.`
+                    ],
+                    'casual': [
+                        `Let's dive into ${topic} - it's honestly one of those things that's way more interesting than you might think!`,
+                        `You know what's been on my mind lately? ${topic}. And I think you'll find this as fascinating as I do.`,
+                        `So, ${topic} - where do I even begin? This is definitely something worth talking about.`
+                    ],
+                    'friendly': [
+                        `Hey there! Today I want to chat with you about ${topic} - something that's been making quite an impact lately.`,
+                        `Have you ever wondered about ${topic}? Well, you're in for a treat because we're about to explore this amazing topic together!`,
+                        `Welcome! I'm excited to share some insights about ${topic} with you today.`
+                    ]
+                };
+
+                return this.randomChoice(intros[tone] || intros['casual']);
+            }
+
+            generateHook(topic, tone, type) {
+                const hooks = {
+                    'professional': [
+                        `Consider this: ${topic} impacts millions of decisions made daily across various sectors.`,
+                        `Research indicates that ${topic} will fundamentally reshape how we approach traditional methodologies.`
+                    ],
+                    'casual': [
+                        `Here's something that might blow your mind about ${topic}...`,
+                        `Picture this: what if ${topic} could completely change the way you think about things?`
+                    ],
+                    'friendly': [
+                        `Imagine if ${topic} could make your life easier and more enjoyable - well, it actually can!`,
+                        `What if I told you that ${topic} is simpler and more accessible than you ever imagined?`
+                    ]
+                };
+
+                return this.randomChoice(hooks[tone] || hooks['casual']);
+            }
+
+            generateMainPoint(topic, tone, pointIndex) {
+                const points = {
+                    'professional': [
+                        `A comprehensive analysis of ${topic} reveals several key factors that contribute to its effectiveness.`,
+                        `The implementation of ${topic} requires careful consideration of various stakeholder perspectives and operational requirements.`,
+                        `Evidence suggests that ${topic} delivers measurable results when properly integrated into existing frameworks.`
+                    ],
+                    'casual': [
+                        `One thing that really stands out about ${topic} is how it just makes sense once you get the hang of it.`,
+                        `The cool thing about ${topic} is that it's actually pretty straightforward when you break it down.`,
+                        `What I love most about ${topic} is how it can totally transform your approach to things.`
+                    ],
+                    'friendly': [
+                        `Let me share one of my favorite aspects of ${topic} - it's the way it brings people together!`,
+                        `Another wonderful thing about ${topic} is how it creates opportunities for growth and learning.`,
+                        `You'll be amazed at how ${topic} can positively impact your daily routine.`
+                    ]
+                };
+
+                return this.randomChoice(points[tone] || points['casual']);
+            }
+
+            generateConclusion(topic, tone, type) {
+                const conclusions = {
+                    'professional': [
+                        `In conclusion, ${topic} represents a significant opportunity for advancement and should be prioritized in strategic planning initiatives.`,
+                        `The evidence clearly demonstrates that ${topic} is not merely a trend but a fundamental shift that requires immediate attention.`
+                    ],
+                    'casual': [
+                        `So there you have it - ${topic} in a nutshell! Pretty amazing stuff, right?`,
+                        `At the end of the day, ${topic} is definitely something worth exploring further.`
+                    ],
+                    'friendly': [
+                        `I hope this gives you a great starting point for exploring ${topic} - you're going to love what you discover!`,
+                        `Thanks for joining me on this journey through ${topic}. I can't wait to hear about your experiences!`
+                    ]
+                };
+
+                return this.randomChoice(conclusions[tone] || conclusions['casual']);
+            }
+
+            generateCTA(topic, tone, type) {
+                const ctas = {
+                    'blog-post': [
+                        "What are your thoughts on this topic? Share your experiences in the comments below!",
+                        "Ready to take the next step? Download our free guide to get started today.",
+                        "Don't forget to subscribe for more insights like this!"
+                    ],
+                    'social-media': [
+                        "What's your take? Drop a comment below! 👇",
+                        "Tag a friend who needs to see this! 👯‍♀️",
+                        "Save this post for later! 📌"
+                    ],
+                    'email': [
+                        "Click here to learn more and take advantage of this exclusive offer.",
+                        "Don't miss out - this offer expires soon!",
+                        "Ready to get started? Reply to this email and let's chat!"
+                    ]
+                };
+
+                return this.randomChoice(ctas[type] || ctas['blog-post']);
+            }
+
+            generateFeatures(topic, tone) {
+                return `Key features of ${topic} include advanced functionality, user-friendly design, and seamless integration capabilities that set it apart from conventional alternatives.`;
+            }
+
+            generateBenefits(topic, tone) {
+                return `The benefits of ${topic} extend beyond immediate applications, offering long-term value through improved efficiency, enhanced user experience, and sustainable outcomes.`;
+            }
+
+            generateGenericSection(topic, section, tone) {
+                return `This section explores the ${section} aspects of ${topic}, providing valuable insights and practical information for readers.`;
+            }
+
+            expandContent(baseSample, structure, topic, tone, audience) {
+                let expandedContent = baseSample;
+
+                // Add additional paragraphs based on structure length
+                const additionalParagraphs = structure.length - 1;
+                
+                for (let i = 0; i < additionalParagraphs; i++) {
+                    expandedContent += '\n\n';
+                    expandedContent += this.generateMainPoint(topic, tone, i);
+                }
+
+                if (structure.includes('conclusion')) {
+                    expandedContent += '\n\n';
+                    expandedContent += this.generateConclusion(topic, tone, 'blog-post');
+                }
+
+                return expandedContent;
+            }
+
+            formatContent(content, type) {
+                // Add type-specific formatting
+                switch (type) {
+                    case 'blog-post':
+                        return this.formatBlogPost(content);
+                    case 'social-media':
+                        return this.formatSocialMedia(content);
+                    case 'email':
+                        return this.formatEmail(content);
+                    default:
+                        return content;
+                }
+            }
+
+            formatBlogPost(content) {
+                // Add some basic blog formatting
+                const paragraphs = content.split('\n\n');
+                const formattedParagraphs = paragraphs.map((p, index) => {
+                    if (index === 0) {
+                        return `<h3>Introduction</h3>\n${p}`;
+                    }
+                    return p;
+                });
+                
+                return formattedParagraphs.join('\n\n');
+            }
+
+            formatSocialMedia(content) {
+                // Add emojis and hashtags for social media
+                const emojis = ['✨', '🚀', '💡', '🔥', '💯', '👌', '🎯', '📈'];
+                const randomEmoji = this.randomChoice(emojis);
+                return `${randomEmoji} ${content}`;
+            }
+
+            formatEmail(content) {
+                // Add email-specific formatting
+                return `Subject: Your ${document.getElementById('topicInput').value} Update\n\nHi there!\n\n${content}\n\nBest regards,\nThe Team`;
+            }
+
+            randomChoice(array) {
+                return array[Math.floor(Math.random() * array.length)];
+            }
+
+            showLoading() {
+                document.getElementById('loadingSpinner').style.display = 'block';
+                document.getElementById('generatedContent').style.display = 'none';
+                document.getElementById('contentActions').classList.add('d-none');
+                document.getElementById('regenerateBtn').style.display = 'none';
+                document.getElementById('copyBtn').style.display = 'none';
+            }
+
+            displayContent(content) {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('generatedContent').style.display = 'block';
+                document.getElementById('generatedContent').innerHTML = content.replace(/\n/g, '<br><br>');
+            }
+
+            showContentActions() {
+                document.getElementById('contentActions').classList.remove('d-none');
+                document.getElementById('regenerateBtn').style.display = 'inline-block';
+                document.getElementById('copyBtn').style.display = 'inline-block';
+            }
+
+            updateWordCount(text) {
+                const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+                document.getElementById('wordCount').textContent = `${words} words`;
+            }
+
+            async copyToClipboard() {
+                const content = document.getElementById('generatedContent').innerText;
+                try {
+                    await navigator.clipboard.writeText(content);
+                    this.showToast('Content copied to clipboard!');
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    this.showToast('Failed to copy content');
+                }
+            }
+
+            downloadContent() {
+                const content = document.getElementById('generatedContent').innerText;
+                const topic = document.getElementById('topicInput').value || 'generated-content';
+                const filename = `${topic.replace(/\s+/g, '-').toLowerCase()}.txt`;
+                
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                
+                this.showToast('Content downloaded!');
+            }
+
+            shareContent() {
+                const content = document.getElementById('generatedContent').innerText;
+                const topic = document.getElementById('topicInput').value;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: `AI Generated Content: ${topic}`,
+                        text: content.substring(0, 200) + '...',
+                        url: window.location.href
+                    });
+                } else {
+                    this.copyToClipboard();
+                    this.showToast('Content copied for sharing!');
+                }
+            }
+
+            showToast(message) {
+                // Simple toast notification
+                const toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        }
+
+        // Initialize the AI Text Generator when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AITextGenerator();
+        });
+
+        // Analytics tracking (placeholder)
+        function trackGeneration(contentType, topic) {
+            // Add your analytics tracking code here
+            console.log('Content generated:', { contentType, topic, timestamp: new Date() });
+        }
+    </script>
+</body>
+</html>

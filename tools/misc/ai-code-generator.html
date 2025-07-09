@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Code Generator - Generate code snippets in multiple programming languages from natural language descriptions. Perfect for developers and learners.">
+    <meta name="keywords" content="AI code generator, programming assistant, code snippets, JavaScript, Python, HTML, CSS, code automation">
+    <title>AI Code Generator - MultiTools Pro</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #06b6d4;
+            --accent-color: #10b981;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-800: #1f2937;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .language-btn {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 4px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .language-btn:hover {
+            border-color: var(--primary-color);
+            background: #f8faff;
+        }
+
+        .language-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .code-output {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 0;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-header {
+            background: #1a202c;
+            padding: 12px 16px;
+            border-bottom: 1px solid #4a5568;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .code-body {
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .code-body pre {
+            margin: 0;
+            background: transparent !important;
+        }
+
+        .complexity-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .complexity-beginner { background: #d1fae5; color: #065f46; }
+        .complexity-intermediate { background: #fef3c7; color: #92400e; }
+        .complexity-advanced { background: #fecaca; color: #991b1b; }
+
+        .loading-code {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            color: #a0aec0;
+        }
+
+        .example-prompt {
+            background: var(--gray-100);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .example-prompt:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .generation-stats {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="fas fa-tools me-2"></i>MultiTools Pro
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-5 fw-bold mb-3">
+                <i class="fas fa-code me-3"></i>AI Code Generator
+            </h1>
+            <p class="lead">Transform your ideas into code with AI-powered programming assistance</p>
+            <div class="mt-3">
+                <span class="badge bg-light text-dark me-2">JavaScript</span>
+                <span class="badge bg-light text-dark me-2">Python</span>
+                <span class="badge bg-light text-dark me-2">HTML/CSS</span>
+                <span class="badge bg-light text-dark">React</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Input Section -->
+            <div class="col-lg-5 mb-4">
+                <div class="tool-card">
+                    <h4 class="mb-4"><i class="fas fa-magic me-2"></i>Code Generation</h4>
+                    
+                    <!-- Language Selection -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Programming Language</label>
+                        <div id="languageSelection">
+                            <div class="language-btn active" data-lang="javascript">
+                                <i class="fab fa-js-square"></i>JavaScript
+                            </div>
+                            <div class="language-btn" data-lang="python">
+                                <i class="fab fa-python"></i>Python
+                            </div>
+                            <div class="language-btn" data-lang="html">
+                                <i class="fab fa-html5"></i>HTML
+                            </div>
+                            <div class="language-btn" data-lang="css">
+                                <i class="fab fa-css3-alt"></i>CSS
+                            </div>
+                            <div class="language-btn" data-lang="react">
+                                <i class="fab fa-react"></i>React
+                            </div>
+                            <div class="language-btn" data-lang="php">
+                                <i class="fab fa-php"></i>PHP
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description Input -->
+                    <div class="mb-4">
+                        <label for="codeDescription" class="form-label fw-semibold">Describe what you want to build</label>
+                        <textarea class="form-control" id="codeDescription" rows="4" placeholder="e.g., Create a function that calculates the factorial of a number"></textarea>
+                    </div>
+
+                    <!-- Complexity Level -->
+                    <div class="mb-4">
+                        <label for="complexityLevel" class="form-label fw-semibold">Complexity Level</label>
+                        <select class="form-select" id="complexityLevel">
+                            <option value="beginner">Beginner - Simple and well-commented</option>
+                            <option value="intermediate" selected>Intermediate - Optimized with best practices</option>
+                            <option value="advanced">Advanced - Complex with error handling</option>
+                        </select>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button class="btn btn-primary w-100 mb-3" id="generateCodeBtn">
+                        <i class="fas fa-magic me-2"></i>Generate Code
+                    </button>
+
+                    <!-- Example Prompts -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Example Prompts</label>
+                        <div id="examplePrompts">
+                            <!-- Examples will be populated based on selected language -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad Space -->
+                <div class="text-center p-3 bg-light rounded">
+                    <small class="text-muted">Advertisement</small>
+                    <div style="height: 250px; background: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                        Your 300x250 Ad Here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Section -->
+            <div class="col-lg-7">
+                <div class="tool-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4><i class="fas fa-terminal me-2"></i>Generated Code</h4>
+                        <div>
+                            <span id="complexityBadge" class="complexity-badge complexity-intermediate">Intermediate</span>
+                        </div>
+                    </div>
+
+                    <!-- Code Output -->
+                    <div class="code-output" id="codeOutput">
+                        <!-- Loading State -->
+                        <div class="loading-code" id="loadingCode">
+                            <div class="spinner-border mb-3" role="status"></div>
+                            <h6>AI is crafting your code...</h6>
+                            <p>Analyzing requirements and generating optimized solution</p>
+                        </div>
+
+                        <!-- Default State -->
+                        <div id="defaultCodeState" class="text-center py-5">
+                            <i class="fas fa-robot fa-3x mb-3" style="color: #a0aec0;"></i>
+                            <h5 style="color: #a0aec0;">Ready to Generate</h5>
+                            <p style="color: #718096;">Describe your code requirements and click Generate</p>
+                        </div>
+
+                        <!-- Generated Code Display -->
+                        <div id="generatedCodeDisplay" style="display: none;">
+                            <div class="code-header">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-file-code me-2" style="color: #a0aec0;"></i>
+                                    <span id="fileName" style="color: #e2e8f0;">output.js</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-light me-2" id="copyCodeBtn">
+                                        <i class="fas fa-copy me-1"></i>Copy
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-light" id="downloadCodeBtn">
+                                        <i class="fas fa-download me-1"></i>Download
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="code-body">
+                                <pre><code id="codeContent" class="language-javascript"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Statistics -->
+                    <div class="generation-stats" id="codeStats" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Lines:</strong> <span id="linesCount">0</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Language:</strong> <span id="languageUsed">JavaScript</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Complexity:</strong> <span id="complexityUsed">Intermediate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Code Explanation -->
+                    <div id="codeExplanation" style="display: none;" class="mt-4">
+                        <h6><i class="fas fa-lightbulb me-2"></i>Code Explanation</h6>
+                        <div id="explanationText" class="bg-light p-3 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad Banner -->
+        <div class="text-center mt-5 p-3 bg-light rounded">
+            <small class="text-muted">Advertisement</small>
+            <div style="height: 90px; background: #e9ecef; display: flex; align-items: center; justify-content: center;">
+                Your 728x90 Banner Ad Here
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Prism.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    
+    <script>
+        class AICodeGenerator {
+            constructor() {
+                this.currentLanguage = 'javascript';
+                this.examples = {
+                    javascript: [
+                        'Create a function to validate email addresses',
+                        'Build a simple calculator with basic operations',
+                        'Generate a random password with custom length',
+                        'Create a sorting algorithm for arrays',
+                        'Build a countdown timer function'
+                    ],
+                    python: [
+                        'Create a function to check if a number is prime',
+                        'Build a web scraper for extracting data',
+                        'Generate Fibonacci sequence up to n terms',
+                        'Create a simple password strength checker',
+                        'Build a file organizer script'
+                    ],
+                    html: [
+                        'Create a responsive contact form',
+                        'Build a navigation menu with dropdown',
+                        'Design a product card component',
+                        'Create a landing page hero section',
+                        'Build a simple image gallery'
+                    ],
+                    css: [
+                        'Create a loading spinner animation',
+                        'Build a responsive grid layout',
+                        'Design a modern button with hover effects',
+                        'Create a gradient background animation',
+                        'Build a card flip animation'
+                    ],
+                    react: [
+                        'Create a todo list component',
+                        'Build a counter with increment/decrement',
+                        'Design a user profile card component',
+                        'Create a search filter component',
+                        'Build a modal dialog component'
+                    ],
+                    php: [
+                        'Create a user registration form handler',
+                        'Build a simple database connection class',
+                        'Generate a secure random token',
+                        'Create a file upload handler',
+                        'Build a basic authentication system'
+                    ]
+                };
+
+                this.codeTemplates = {
+                    javascript: {
+                        'factorial': {
+                            beginner: `// Calculate factorial of a number
+function factorial(n) {
+    // Base case: factorial of 0 or 1 is 1
+    if (n === 0 || n === 1) {
+        return 1;
+    }
+    
+    // Recursive case: n * factorial(n-1)
+    return n * factorial(n - 1);
+}
+
+// Example usage
+console.log(factorial(5)); // Output: 120`,
+                            intermediate: `/**
+ * Calculate factorial of a number using recursion
+ * @param {number} n - The number to calculate factorial for
+ * @returns {number} The factorial of n
+ * @throws {Error} If n is negative or not an integer
+ */
+function factorial(n) {
+    if (!Number.isInteger(n) || n < 0) {
+        throw new Error('Input must be a non-negative integer');
+    }
+    
+    return n <= 1 ? 1 : n * factorial(n - 1);
+}
+
+// Alternative iterative approach for better performance
+function factorialIterative(n) {
+    if (!Number.isInteger(n) || n < 0) {
+        throw new Error('Input must be a non-negative integer');
+    }
+    
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+    return result;
+}
+
+export { factorial, factorialIterative };`,
+                            advanced: `/**
+ * Advanced factorial implementation with memoization and BigInt support
+ */
+class FactorialCalculator {
+    constructor() {
+        this.cache = new Map([[0n, 1n], [1n, 1n]]);
+    }
+
+    /**
+     * Calculate factorial with memoization for large numbers
+     * @param {number|bigint} n - Number to calculate factorial for
+     * @returns {bigint} Factorial result
+     */
+    calculate(n) {
+        const bigN = BigInt(n);
+        
+        if (bigN < 0n) {
+            throw new RangeError('Factorial is not defined for negative numbers');
+        }
+
+        if (this.cache.has(bigN)) {
+            return this.cache.get(bigN);
+        }
+
+        let result = this.cache.get(bigN - 1n) || this.calculate(bigN - 1n);
+        result *= bigN;
+        
+        this.cache.set(bigN, result);
+        return result;
+    }
+
+    /**
+     * Get factorial using Stirling's approximation for very large numbers
+     * @param {number} n - Number to approximate
+     * @returns {number} Approximate factorial
+     */
+    approximateFactorial(n) {
+        if (n < 0) throw new RangeError('Input must be non-negative');
+        if (n === 0) return 1;
+        
+        return Math.sqrt(2 * Math.PI * n) * Math.pow(n / Math.E, n);
+    }
+}
+
+const calculator = new FactorialCalculator();
+export default calculator;`
+                        }
+                    },
+                    python: {
+                        'prime checker': {
+                            beginner: `# Function to check if a number is prime
+def is_prime(n):
+    # Numbers less than 2 are not prime
+    if n < 2:
+        return False
+    
+    # Check for factors from 2 to n-1
+    for i in range(2, n):
+        if n % i == 0:
+            return False
+    
+    return True
+
+# Example usage
+number = 17
+if is_prime(number):
+    print(f"{number} is a prime number")
+else:
+    print(f"{number} is not a prime number")`,
+                            intermediate: `import math
+
+def is_prime(n):
+    """
+    Check if a number is prime using optimized algorithm
+    
+    Args:
+        n (int): Number to check
+        
+    Returns:
+        bool: True if prime, False otherwise
+    """
+    if n < 2:
+        return False
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    
+    # Check odd divisors up to sqrt(n)
+    for i in range(3, int(math.sqrt(n)) + 1, 2):
+        if n % i == 0:
+            return False
+    
+    return True
+
+def get_primes_up_to(limit):
+    """Generate all prime numbers up to a given limit"""
+    primes = []
+    for num in range(2, limit + 1):
+        if is_prime(num):
+            primes.append(num)
+    return primes
+
+# Example usage
+if __name__ == "__main__":
+    print(f"Primes up to 50: {get_primes_up_to(50)}")`,
+                            advanced: `import math
+from typing import List, Iterator
+
+class PrimeChecker:
+    """Advanced prime number operations with multiple algorithms"""
+    
+    def __init__(self):
+        self._cache = {2: True}
+    
+    def is_prime(self, n: int) -> bool:
+        """
+        Optimized primality test with caching
+        
+        Args:
+            n: Integer to test
+            
+        Returns:
+            bool: True if prime
+            
+        Raises:
+            ValueError: If n is negative
+        """
+        if n < 0:
+            raise ValueError("Input must be non-negative")
+        
+        if n in self._cache:
+            return self._cache[n]
+        
+        if n < 2:
+            result = False
+        elif n == 2:
+            result = True
+        elif n % 2 == 0:
+            result = False
+        else:
+            result = self._miller_rabin_test(n) if n > 1000 else self._trial_division(n)
+        
+        self._cache[n] = result
+        return result
+    
+    def _trial_division(self, n: int) -> bool:
+        """Trial division for smaller numbers"""
+        for i in range(3, int(math.sqrt(n)) + 1, 2):
+            if n % i == 0:
+                return False
+        return True
+    
+    def _miller_rabin_test(self, n: int, k: int = 5) -> bool:
+        """Miller-Rabin probabilistic primality test"""
+        if n == 2 or n == 3:
+            return True
+        if n < 2 or n % 2 == 0:
+            return False
+        
+        # Write n-1 as d * 2^r
+        r = 0
+        d = n - 1
+        while d % 2 == 0:
+            r += 1
+            d //= 2
+        
+        # Witness loop
+        import random
+        for _ in range(k):
+            a = random.randrange(2, n - 1)
+            x = pow(a, d, n)
+            
+            if x == 1 or x == n - 1:
+                continue
+            
+            for _ in range(r - 1):
+                x = pow(x, 2, n)
+                if x == n - 1:
+                    break
+            else:
+                return False
+        
+        return True
+    
+    def sieve_of_eratosthenes(self, limit: int) -> List[int]:
+        """Generate all primes up to limit using Sieve of Eratosthenes"""
+        if limit < 2:
+            return []
+        
+        sieve = [True] * (limit + 1)
+        sieve[0] = sieve[1] = False
+        
+        for i in range(2, int(math.sqrt(limit)) + 1):
+            if sieve[i]:
+                for j in range(i * i, limit + 1, i):
+                    sieve[j] = False
+        
+        return [i for i, is_prime in enumerate(sieve) if is_prime]
+
+# Usage
+checker = PrimeChecker()
+print(f"Is 982451653 prime? {checker.is_prime(982451653)}")
+print(f"First 20 primes: {checker.sieve_of_eratosthenes(100)[:20]}")`
+                        }
+                    }
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateExamplePrompts();
+                this.updateComplexityBadge();
+            }
+
+            bindEvents() {
+                // Language selection
+                document.querySelectorAll('.language-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.language-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentLanguage = btn.dataset.lang;
+                        this.updateExamplePrompts();
+                        this.updateFileName();
+                    });
+                });
+
+                // Generate button
+                document.getElementById('generateCodeBtn').addEventListener('click', () => this.generateCode());
+
+                // Copy button
+                document.getElementById('copyCodeBtn').addEventListener('click', () => this.copyCode());
+
+                // Download button
+                document.getElementById('downloadCodeBtn').addEventListener('click', () => this.downloadCode());
+
+                // Complexity change
+                document.getElementById('complexityLevel').addEventListener('change', () => this.updateComplexityBadge());
+
+                // Example prompt clicks
+                document.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('example-prompt')) {
+                        document.getElementById('codeDescription').value = e.target.textContent;
+                    }
+                });
+            }
+
+            updateExamplePrompts() {
+                const container = document.getElementById('examplePrompts');
+                container.innerHTML = '';
+                
+                this.examples[this.currentLanguage].forEach(example => {
+                    const prompt = document.createElement('div');
+                    prompt.className = 'example-prompt';
+                    prompt.textContent = example;
+                    container.appendChild(prompt);
+                });
+            }
+
+            updateComplexityBadge() {
+                const complexity = document.getElementById('complexityLevel').value;
+                const badge = document.getElementById('complexityBadge');
+                
+                badge.className = `complexity-badge complexity-${complexity}`;
+                badge.textContent = complexity.charAt(0).toUpperCase() + complexity.slice(1);
+            }
+
+            updateFileName() {
+                const extensions = {
+                    javascript: 'js',
+                    python: 'py',
+                    html: 'html',
+                    css: 'css',
+                    react: 'jsx',
+                    php: 'php'
+                };
+                
+                document.getElementById('fileName').textContent = `output.${extensions[this.currentLanguage]}`;
+            }
+
+            async generateCode() {
+                const description = document.getElementById('codeDescription').value.trim();
+                if (!description) {
+                    alert('Please describe what you want to build');
+                    return;
+                }
+
+                this.showLoading();
+                
+                // Simulate AI processing
+                await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
+
+                const generatedCode = this.createCode(description);
+                this.displayCode(generatedCode);
+            }
+
+            createCode(description) {
+                const complexity = document.getElementById('complexityLevel').value;
+                const language = this.currentLanguage;
+                
+                // Check for specific patterns in description
+                const keywords = description.toLowerCase();
+                
+                let code, explanation;
+                
+                if (keywords.includes('factorial')) {
+                    code = this.codeTemplates.javascript.factorial[complexity];
+                    explanation = "This code implements a factorial function. The factorial of a number n (written as n!) is the product of all positive integers less than or equal to n.";
+                } else if (keywords.includes('prime')) {
+                    code = this.codeTemplates.python['prime checker'][complexity];
+                    explanation = "This code checks if a given number is prime. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.";
+                } else {
+                    // Generate generic code based on language and complexity
+                    code = this.generateGenericCode(description, language, complexity);
+                    explanation = this.generateExplanation(description, language);
+                }
+
+                return {
+                    code,
+                    explanation,
+                    language,
+                    complexity,
+                    lines: code.split('\n').length
+                };
+            }
+
+            generateGenericCode(description, language, complexity) {
+                const templates = {
+                    javascript: {
+                        beginner: `// ${description}
+function solutionFunction(input) {
+    // TODO: Implement your logic here
+    console.log("Processing:", input);
+    
+    // Basic implementation
+    let result = input;
+    
+    return result;
+}
+
+// Example usage
+const testInput = "example";
+const output = solutionFunction(testInput);
+console.log("Result:", output);`,
+                        intermediate: `/**
+ * ${description}
+ * @param {any} input - The input parameter
+ * @returns {any} The processed result
+ */
+function solutionFunction(input) {
+    try {
+        // Validate input
+        if (input === null || input === undefined) {
+            throw new Error('Input cannot be null or undefined');
+        }
+        
+        // Process the input
+        const result = processInput(input);
+        
+        return result;
+    } catch (error) {
+        console.error('Error in solutionFunction:', error.message);
+        return null;
+    }
+}
+
+function processInput(input) {
+    // Implementation logic goes here
+    return input;
+}
+
+// Export for use in other modules
+export { solutionFunction };`,
+                        advanced: `/**
+ * Advanced implementation: ${description}
+ * Includes error handling, type checking, and optimization
+ */
+class SolutionClass {
+    constructor(options = {}) {
+        this.options = {
+            debug: false,
+            timeout: 5000,
+            ...options
+        };
+        this.cache = new Map();
+    }
+
+    /**
+     * Main processing method with caching and error handling
+     * @param {any} input - Input data
+     * @returns {Promise<any>} Processed result
+     */
+    async process(input) {
+        const startTime = performance.now();
+        
+        try {
+            this.validateInput(input);
+            
+            const cacheKey = this.generateCacheKey(input);
+            if (this.cache.has(cacheKey)) {
+                return this.cache.get(cacheKey);
+            }
+            
+            const result = await this.executeWithTimeout(
+                () => this.processInternal(input),
+                this.options.timeout
+            );
+            
+            this.cache.set(cacheKey, result);
+            
+            if (this.options.debug) {
+                console.log(\`Processing completed in \${performance.now() - startTime}ms\`);
+            }
+            
+            return result;
+        } catch (error) {
+            this.handleError(error);
+            throw error;
+        }
+    }
+
+    validateInput(input) {
+        if (input === null || input === undefined) {
+            throw new TypeError('Input cannot be null or undefined');
+        }
+    }
+
+    generateCacheKey(input) {
+        return JSON.stringify(input);
+    }
+
+    async executeWithTimeout(fn, timeout) {
+        return Promise.race([
+            fn(),
+            new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Operation timeout')), timeout)
+            )
+        ]);
+    }
+
+    processInternal(input) {
+        // Core processing logic
+        return input;
+    }
+
+    handleError(error) {
+        console.error('SolutionClass Error:', error);
+        // Add error reporting/logging here
+    }
+}
+
+export default SolutionClass;`
+                    },
+                    python: {
+                        beginner: `# ${description}
+def solution_function(input_data):
+    """
+    Simple implementation of the requested functionality
+    """
+    # TODO: Add your logic here
+    print(f"Processing: {input_data}")
+    
+    # Basic processing
+    result = input_data
+    
+    return result
+
+# Example usage
+if __name__ == "__main__":
+    test_input = "example"
+    output = solution_function(test_input)
+    print(f"Result: {output}")`,
+                        intermediate: `"""
+${description}
+This module provides an optimized implementation with proper error handling
+"""
+
+def solution_function(input_data, **kwargs):
+    """
+    Process input data according to requirements
+    
+    Args:
+        input_data: The data to process
+        **kwargs: Additional options
+        
+    Returns:
+        Processed result
+        
+    Raises:
+        ValueError: If input is invalid
+        TypeError: If input type is incorrect
+    """
+    # Validate input
+    if input_data is None:
+        raise ValueError("Input data cannot be None")
+    
+    try:
+        # Process the data
+        result = _process_data(input_data, **kwargs)
+        return result
+    except Exception as e:
+        print(f"Error processing data: {e}")
+        raise
+
+def _process_data(data, **options):
+    """Internal processing function"""
+    # Implementation goes here
+    return data
+
+if __name__ == "__main__":
+    # Test the function
+    try:
+        result = solution_function("test_data")
+        print(f"Success: {result}")
+    except Exception as e:
+        print(f"Error: {e}")`,
+                        advanced: `"""
+Advanced implementation: ${description}
+Features: Type hints, logging, caching, async support, and comprehensive error handling
+"""
+
+import asyncio
+import logging
+from typing import Any, Dict, Optional, Union
+from functools import lru_cache, wraps
+from datetime import datetime
+import json
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+class SolutionProcessor:
+    """
+    Advanced processor class with caching, validation, and monitoring
+    """
+    
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        self.config = config or {}
+        self.debug = self.config.get('debug', False)
+        self.cache_size = self.config.get('cache_size', 128)
+        self._stats = {'processed': 0, 'errors': 0, 'cache_hits': 0}
+    
+    @lru_cache(maxsize=128)
+    def process_sync(self, input_data: Any, **kwargs) -> Any:
+        """
+        Synchronous processing with caching
+        
+        Args:
+            input_data: Data to process
+            **kwargs: Additional parameters
+            
+        Returns:
+            Processed result
+            
+        Raises:
+            ValueError: For invalid input
+            RuntimeError: For processing errors
+        """
+        try:
+            self._validate_input(input_data)
+            
+            start_time = datetime.now()
+            result = self._execute_processing(input_data, **kwargs)
+            processing_time = (datetime.now() - start_time).total_seconds()
+            
+            self._update_stats('processed')
+            
+            if self.debug:
+                logger.info(f"Processed in {processing_time:.3f}s")
+            
+            return result
+            
+        except Exception as e:
+            self._update_stats('errors')
+            logger.error(f"Processing failed: {e}")
+            raise RuntimeError(f"Processing error: {str(e)}") from e
+    
+    async def process_async(self, input_data: Any, **kwargs) -> Any:
+        """Asynchronous processing for better performance"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self.process_sync, input_data, **kwargs)
+    
+    def _validate_input(self, data: Any) -> None:
+        """Validate input data"""
+        if data is None:
+            raise ValueError("Input data cannot be None")
+        
+        # Add more validation rules as needed
+        if isinstance(data, str) and len(data) == 0:
+            raise ValueError("Input string cannot be empty")
+    
+    def _execute_processing(self, data: Any, **kwargs) -> Any:
+        """Core processing logic - override in subclasses"""
+        # Implement your specific logic here
+        return data
+    
+    def _update_stats(self, metric: str) -> None:
+        """Update internal statistics"""
+        if metric in self._stats:
+            self._stats[metric] += 1
+    
+    def get_stats(self) -> Dict[str, int]:
+        """Get processing statistics"""
+        return self._stats.copy()
+    
+    def reset_cache(self) -> None:
+        """Clear the processing cache"""
+        self.process_sync.cache_clear()
+        logger.info("Cache cleared")
+
+# Example usage
+if __name__ == "__main__":
+    processor = SolutionProcessor({'debug': True})
+    
+    try:
+        result = processor.process_sync("test_data")
+        print(f"Result: {result}")
+        print(f"Stats: {processor.get_stats()}")
+    except Exception as e:
+        print(f"Error: {e}")
+        
+    # Async example
+    async def async_example():
+        result = await processor.process_async("async_test")
+        return result
+    
+    # asyncio.run(async_example())`
+                    }
+                };
+
+                return templates[language]?.[complexity] || templates.javascript[complexity];
+            }
+
+            generateExplanation(description, language) {
+                const explanations = {
+                    javascript: `This JavaScript code provides a solution for: "${description}". The implementation follows modern ES6+ standards with proper error handling and documentation.`,
+                    python: `This Python implementation addresses: "${description}". The code follows PEP 8 style guidelines and includes proper type hints and error handling.`,
+                    html: `This HTML structure creates: "${description}". The markup is semantic and follows modern web standards for accessibility and SEO.`,
+                    css: `This CSS styling implements: "${description}". The styles use modern CSS features with responsive design principles.`,
+                    react: `This React component provides: "${description}". The implementation uses functional components with hooks for state management.`,
+                    php: `This PHP code implements: "${description}". The solution follows PSR standards with proper error handling and security considerations.`
+                };
+
+                return explanations[language] || explanations.javascript;
+            }
+
+            showLoading() {
+                document.getElementById('defaultCodeState').style.display = 'none';
+                document.getElementById('generatedCodeDisplay').style.display = 'none';
+                document.getElementById('loadingCode').style.display = 'block';
+                document.getElementById('codeStats').style.display = 'none';
+                document.getElementById('codeExplanation').style.display = 'none';
+            }
+
+            displayCode(codeData) {
+                // Hide loading and show results
+                document.getElementById('loadingCode').style.display = 'none';
+                document.getElementById('generatedCodeDisplay').style.display = 'block';
+                document.getElementById('codeStats').style.display = 'block';
+                document.getElementById('codeExplanation').style.display = 'block';
+
+                // Set code content
+                const codeElement = document.getElementById('codeContent');
+                codeElement.textContent = codeData.code;
+                codeElement.className = `language-${codeData.language}`;
+
+                // Update stats
+                document.getElementById('linesCount').textContent = codeData.lines;
+                document.getElementById('languageUsed').textContent = codeData.language.charAt(0).toUpperCase() + codeData.language.slice(1);
+                document.getElementById('complexityUsed').textContent = codeData.complexity.charAt(0).toUpperCase() + codeData.complexity.slice(1);
+
+                // Set explanation
+                document.getElementById('explanationText').textContent = codeData.explanation;
+
+                // Trigger syntax highlighting
+                if (window.Prism) {
+                    Prism.highlightElement(codeElement);
+                }
+            }
+
+            async copyCode() {
+                const code = document.getElementById('codeContent').textContent;
+                try {
+                    await navigator.clipboard.writeText(code);
+                    this.showToast('Code copied to clipboard!');
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                }
+            }
+
+            downloadCode() {
+                const code = document.getElementById('codeContent').textContent;
+                const language = this.currentLanguage;
+                const extensions = {
+                    javascript: 'js',
+                    python: 'py',
+                    html: 'html',
+                    css: 'css',
+                    react: 'jsx',
+                    php: 'php'
+                };
+
+                const blob = new Blob([code], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `generated-code.${extensions[language]}`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showToast('Code downloaded!');
+            }
+
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3';
+                toast.innerHTML = `
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                const bsToast = new bootstrap.Toast(toast);
+                bsToast.show();
+                
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AICodeGenerator();
+        });
+    </script>
+</body>
+</html>
